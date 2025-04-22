@@ -1,0 +1,5 @@
+# Dependency directories
+node_modules/
+
+# npm generated package.lock.json
+package-lock.json
