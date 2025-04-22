@@ -1,54 +1,60 @@
-// import React, { useState } from "react";
-
-// const WeatherDisplay = () => {
-//   const [weather, setWeather] = useState({ icon: "⛅", temp: "--°C" });
-
-//   return (
-//     <div className="weather-display">
-//       <span id="weather-icon">{weather.icon}</span>
-//       <span id="weather-temp">{weather.temp}</span>
-//     </div>
-//   );
-// };
-
-// export default WeatherDisplay;
-
 
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 const WeatherDisplay = () => {
-  const [weather, setWeather] = useState({ icon: "⛅", temp: "--°C" });
+  const [weather, setWeather] = useState({ icon: "", temp: "--°C", description: "" });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Replace with your own OpenWeatherMap API Key
-  const API_KEY = "b582b0bd5174f92b10a923dbbcbcb18f";
-  const CITY = "Chennai"; // You can replace this with dynamic city name based on user's location
+  const API_KEY = "b582b0bd5174f92b10a923dbbcbcb18f"; 
+  const CITY = "chennai"; 
   
   useEffect(() => {
     const fetchWeather = async () => {
       try {
-        // Fetch the weather data
         const response = await axios.get(
           `https://api.openweathermap.org/data/2.5/weather?q=${CITY}&appid=${API_KEY}&units=metric`
         );
 
-        // Parse the response and update the state
         const weatherData = response.data;
-        const icon = `http://openweathermap.org/img/wn/${weatherData.weather[0].icon}.png`;
-        const temp = `${weatherData.main.temp}°C`;
+        const temp = weatherData.main.temp;
+        const description = weatherData.weather[0].description; 
+        let icon = "";
 
-        setWeather({ icon, temp });
+      
+        if (temp < 0) {
+          icon = "❄️"; // Snowy Icon for freezing temperatures
+        } else if (temp < 15) {
+          icon = "🌧️"; // Rainy Icon for cool temperatures
+        } else if (temp < 25) {
+          icon = "🌤️"; // Partly Sunny Icon for moderate temperatures
+        } else {
+          icon = "☀️"; // Sunny Icon for warm temperatures
+        }
+
+        
+        if (description.includes("rain")) {
+          icon = "🌧️"; // Rainy Icon
+        } else if (description.includes("snow")) {
+          icon = "❄️"; // Snowy Icon
+        } else if (description.includes("clear")) {
+          icon = icon; // Use the already set icon
+        } else if (description.includes("cloud")) {
+          icon = "☁️"; // Cloudy Icon
+        }
+
+       
+        setWeather({ icon, temp: `${temp}°C`, description });
         setLoading(false);
       } catch (error) {
-        setError("N/A");
+        setError("Failed to fetch weather data.");
         setLoading(false);
       }
     };
 
     fetchWeather();
-  }, []); // Empty dependency array means this effect runs once after the initial render
+  }, []); 
 
   if (loading) {
     return <div>Loading weather...</div>;
@@ -60,8 +66,9 @@ const WeatherDisplay = () => {
 
   return (
     <div className="weather-display">
-      <img src={weather.icon} alt="Weather icon" />
+      <span style={{ fontSize: "2em" }}>{weather.icon}</span>
       <span id="weather-temp">{weather.temp}</span>
+      <div>{weather.description}</div>
     </div>
   );
 };

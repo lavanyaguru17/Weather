@@ -1,4 +1,4 @@
-/* Base Styles */
+
 :root {
   --primary-color: #ff9277;
   --secondary-color: #ffd6a5;
@@ -9,12 +9,7 @@
   --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   --transition: all 0.3s ease;
 
-  /* Mood colors */
-  --mood-happy: #ffcb66;
-  --mood-neutral: #b3b3b3;
-  --mood-sad: #6699cc;
-  --mood-angry: #ff6b6b;
-  --mood-sick: #a5d6a7;
+
 }
 
 * {
@@ -169,6 +164,10 @@ main {
 .mood-btn.selected {
   border-color: var(--primary-color);
   transform: scale(1.1);
+}
+
+.mood-btn.active {
+  border-color: red;  /* red border when active */
 }
 
 .mood-btn[data-mood="happy"] {
